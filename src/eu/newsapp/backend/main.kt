@@ -12,7 +12,7 @@ fun main(args : Array<String>)
 	port(8706)
 
 	get("/api/articles.json") { req, res ->
-		val articles = loadArticles()
+		val articles = loadArticles(req.queryParams("limit")?.toIntOrNull() ?: 25)
 		res.header("Content-Type", "application/json")
 		val out = res.raw().outputStream
 		jacksonObjectMapper().writeValue(out, articles)

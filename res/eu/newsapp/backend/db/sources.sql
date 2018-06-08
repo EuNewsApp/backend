@@ -8,7 +8,6 @@ INSERT INTO "source" (name, country, "language", rss) VALUES
   ('Bild', 'DE', 'DE', 'https://www.bild.de/rssfeeds/vw-politik/vw-politik-16728980,search=europa,dzbildplus=true,sort=1,teaserbildmobil=false,view=rss2.bild.xml'),
   ('Le Monde', 'FR', 'FR', 'https://www.lemonde.fr/europe/rss_full.xml'),
   ('Le Figaro', 'FR', 'FR', 'https://www.lefigaro.fr/rss/figaro_politique.xml'),
-  ('Liberation', 'FR', 'FR', 'https://rss.liberation.fr/rss/11/'),
   ('The Guardian', 'UK', 'EN', 'https://www.theguardian.com/world/europe-news/rss'),
   ('Daily Mail', 'UK', 'EN', 'https://www.dailymail.co.uk/news/european-union/index.rss'),
   ('Daily Telegraph', 'UK', 'EN', 'https://www.telegraph.co.uk/rss.xml'),

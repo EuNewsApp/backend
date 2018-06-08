@@ -44,8 +44,8 @@ fun loadArticles(limit : Int = 25) : List<Article>
 				source = rs.getString("source"),
 				link = rs.getString("link"),
 				img = rs.getString("img"),
-				title_en = rs.getString("title_en").trim(),
-				headline_en = rs.getString("headline_en").trim()
+				title_en = rs.getString("title_en")?.trim(),
+				headline_en = rs.getString("headline_en")?.trim()
 		)
 	}))
 }

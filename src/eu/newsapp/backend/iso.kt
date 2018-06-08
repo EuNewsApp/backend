@@ -9,10 +9,9 @@ enum class IsoAlpha2
 	FR,
 	GR,
 	IT,
+	IR,
 	NL,
-	NZ,
 	PL,
 	RO,
-	SP,
 	UK,
 }

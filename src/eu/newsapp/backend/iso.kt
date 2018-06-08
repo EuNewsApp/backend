@@ -4,6 +4,7 @@ enum class IsoAlpha2
 {
 	BG,
 	DE,
+	ES,
 	FR,
 	GK,
 	IT,

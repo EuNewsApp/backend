@@ -11,8 +11,8 @@ data class Article(
 		val source : String,
 		val link : String,
 		val img : String?,
-		val title_en : String? = null,
-		val headline_en : String? = null
+		val titleEn : String? = null,
+		val headlineEn : String? = null
 )
 
 fun store(articles : List<RssArticle>, sourceId : Long)
@@ -44,8 +44,8 @@ fun loadArticles(limit : Int = 25) : List<Article>
 				source = rs.getString("source"),
 				link = rs.getString("link"),
 				img = rs.getString("img"),
-				title_en = rs.getString("title_en")?.trim(),
-				headline_en = rs.getString("headline_en")?.trim()
+				titleEn = rs.getString("title_en")?.trim(),
+				headlineEn = rs.getString("headline_en")?.trim()
 		)
 	}))
 }

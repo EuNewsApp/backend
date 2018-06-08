@@ -19,15 +19,25 @@ fun main(args : Array<String>)
 		out.close()
 	}
 	
-	val reader = RssReader()
-	val articles = reader.read("https://spiegel.de/index.rss")
-	articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
-		val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate("DE").parseBatch()
-		v.map { it.value }.withIndex().map { (j, article) ->
-			val (title, description) = translated[j]
-			article.enTitle = title
-			article.enDescription = description
-		}
+	get("/api/scrape") { req, res ->
+		val sources = loadSources()
+		res.header("Content-Type", "application/json")
+		val out = res.raw().outputStream
+		jacksonObjectMapper().writeValue(out, sources)
+		out.close()
 	}
-	store(articles, 100)
+	
+	get("/api/scrape/:source") { req, res ->
+		val reader = RssReader()
+		val articles = reader.read("https://spiegel.de/index.rss")
+		articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
+			val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate("DE").parseBatch()
+			v.map { it.value }.withIndex().map { (j, article) ->
+				val (title, description) = translated[j]
+				article.enTitle = title
+				article.enDescription = description
+			}
+		}
+		store(articles, 100)
+	}
 }

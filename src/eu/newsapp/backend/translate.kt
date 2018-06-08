@@ -16,6 +16,9 @@ val translateClient: AmazonTranslate by lazy {
         .build()
 }
 
+fun String.translate(sourceLanguage : IsoAlpha2)
+    = translate(sourceLanguage.name)
+
 fun String.translate(sourceLanguage : String): String {
     val request = TranslateTextRequest()
             .withText(this)

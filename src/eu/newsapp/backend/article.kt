@@ -22,8 +22,8 @@ data class Article(
 		val source : String,
 		val link : String,
 		val img : String?,
-		val `title-en` : String? = null,
-		val `headline-en` : String? = null
+		val title_en : String? = null,
+		val headline_en : String? = null
 )
 
 // TODO this is just a dummy

@@ -31,18 +31,20 @@ CREATE SEQUENCE IF NOT EXISTS "article_id_seq"
 
 CREATE TABLE IF NOT EXISTS "article" (
 	id BIGINT NOT NULL DEFAULT nextval('article_id_seq'),
+	hash CHARACTER(64) NOT NULL,
 	title TEXT NOT NULL,
 	headline TEXT NOT NULL,
 	source BIGINT NOT NULL,
-	guid TEXT,
+	link TEXT NOT NULL,
 	img TEXT,
-	pub_date TIMESTAMP WITH TIME ZONE,
-	"title-en" TEXT,
-	"headline-en" TEXT,
+	pub_date TIMESTAMP WITH TIME ZONE NOT NULL,
+	title_en TEXT,
+  headline_en TEXT,
 	-- primary key
 	CONSTRAINT article_pkey PRIMARY KEY (id),
 	-- unique constraints
-	CONSTRAINT article_source_guid_uniq UNIQUE (source, guid),
+	CONSTRAINT article_source_hash_uniq UNIQUE (source, hash),
+	CONSTRAINT article_link_uniq UNIQUE (link),
 	-- foreign keys
 	FOREIGN KEY (source) REFERENCES "source"(id) ON DELETE CASCADE
 );

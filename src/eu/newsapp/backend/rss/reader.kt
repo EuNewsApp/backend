@@ -1,11 +1,14 @@
 package eu.newsapp.backend.rss
 
 import com.rometools.rome.io.SyndFeedInput
+import eu.newsapp.backend.toHex
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
+import java.security.MessageDigest
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import kotlin.text.Charsets.UTF_8
 
 val okhttpClient by lazy {
 	OkHttpClient()
@@ -22,6 +25,10 @@ data class RssArticle(
 	var enTitle : String? = null
 	var enDescription : String? = null
 	
+	val hash get() = run {
+		val digest = MessageDigest.getInstance("SHA-256")
+		digest.digest(title.toByteArray(UTF_8)).toHex()
+	}
 }
 
 class RssReader(val hints : RssReaderHints = DefaultRssReaderHints)

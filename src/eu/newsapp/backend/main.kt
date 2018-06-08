@@ -28,8 +28,12 @@ fun main(args : Array<String>)
 	}
 	
 	get("/api/scrape/:source") { req, res ->
+		res.header("Content-Type", "application/json")
+		val source = loadSource(req.params("source").toLong())
+				?: return@get """{"success":false,"error":"Could not find source with the specified id"}"""
+		
 		val reader = RssReader()
-		val articles = reader.read("https://spiegel.de/index.rss")
+		val articles = reader.read(source.rss).filter { !articleHashExists(it.hash) }
 		articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
 			val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate("DE").parseBatch()
 			v.map { it.value }.withIndex().map { (j, article) ->
@@ -38,6 +42,6 @@ fun main(args : Array<String>)
 				article.enDescription = description
 			}
 		}
-		store(articles, 100)
+		store(articles, source.id)
 	}
 }

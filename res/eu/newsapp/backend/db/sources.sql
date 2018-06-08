@@ -9,11 +9,11 @@ INSERT INTO "source" (name, country, "language", rss) VALUES
   ('Le Monde', 'FR', 'FR', 'https://www.lemonde.fr/europe/rss_full.xml'),
   ('Le Figaro', 'FR', 'FR', 'https://www.lefigaro.fr/rss/figaro_politique.xml'),
   ('The Guardian', 'UK', 'EN', 'https://www.theguardian.com/world/europe-news/rss'),
-  ('Daily Mail', 'UK', 'EN', 'https://www.dailymail.co.uk/news/european-union/index.rss'),
+  ('BBC', 'UK', 'EN', 'http://feeds.bbci.co.uk/news/world/europe/rss.xml'),
   ('Daily Telegraph', 'UK', 'EN', 'https://www.telegraph.co.uk/rss.xml'),
   ('La Repubblica', 'IT', 'IT', 'http://www.repubblica.it/rss/homepage/rss2.0.xml'),
   ('Corriere della Sera', 'IT', 'IT', 'http://xml2.corriereobjects.it/rss/politica.xml'),
-  ('La Stammpa', 'IT', 'IT', 'http://www.lastampa.it/italia/politica/rss.xml'),
+  ('La Stampa', 'IT', 'IT', 'http://www.lastampa.it/italia/politica/rss.xml'),
   ('El Pais', 'ES', 'ES', 'https://elpais.com/tag/rss/europa/a/'),
   ('El Mundo', 'ES', 'ES', 'http://estaticos.elmundo.es/elmundo/rss/union_europea.xml'),
   ('ABC', 'ES', 'ES', 'http://www.abc.es/rss/feeds/abc_Internacional.xml'),
@@ -22,12 +22,14 @@ INSERT INTO "source" (name, country, "language", rss) VALUES
   ('Realitatea', 'RO', 'RO', 'http://rss.realitatea.net/extern.xml'),
   ('Evenimentul zilei', 'RO', 'RO', 'http://evz.ro/rss'),
   ('De Telegraaf', 'NL', 'NL', 'https://www.telegraaf.nl/nieuws/buitenland/rss'),
-  ('De Volkskrant', 'NL', 'NL','https://www.volkskrant.nl/nieuws-achtergrond/rss.xml'),
-  ('Algemeen Dagblad','NL', 'NL','https://www.ad.nl/politiek/rss.xml'),
+  ('De Volkskrant', 'NL', 'NL', 'https://www.volkskrant.nl/nieuws-achtergrond/rss.xml'),
+  ('Algemeen Dagblad','NL', 'NL', 'https://www.ad.nl/politiek/rss.xml'),
   ('Le Soir', 'BG', 'FR', 'http://www.lesoir.be/rss/81853/cible_principale_gratuit'),
   ('Kathimerini', 'GR', 'GR', 'http://www.kathimerini.gr/rss'),
   ('Protothema', 'GR', 'GR', 'https://www.protothema.gr/rss'),
-  ('News.Gr', 'GR', 'GR', 'https://www.news.gr/rss.ashx?catid=5')
+  ('News.Gr', 'GR', 'GR', 'https://www.news.gr/rss.ashx?catid=5'),
+  ('Jornal de Notícias', 'PT', 'PT', 'http://feeds.jn.pt/JN-Mundo'),
+  ('Observador', 'PT', 'PT', 'https://observador.pt/feed/')
 ON CONFLICT DO NOTHING;
 
 -- commit the transaction

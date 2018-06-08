@@ -1,5 +1,6 @@
 package eu.newsapp.backend.db
 
+import java.util.Date
 import com.jcabi.jdbc.*
 import eu.newsapp.backend.IsoAlpha2
 import eu.newsapp.backend.rss.RssArticle
@@ -11,6 +12,7 @@ data class Article(
 		val source : String,
 		val link : String,
 		val img : String?,
+		val pubDate : Date,
 		val titleEn : String? = null,
 		val headlineEn : String? = null
 )
@@ -35,7 +37,7 @@ fun store(articles : List<RssArticle>, sourceId : Long)
 
 fun loadArticles(limit : Int = 25) : List<Article>
 {
-	val sql = "SELECT article.title, article.headline, source.country, source.name AS source, article.img, article.link, article.title_en, article.headline_en FROM article INNER JOIN source ON source.id = article.source ORDER BY pub_date DESC LIMIT ?;"
+	val sql = "SELECT article.title, article.headline, source.country, source.name AS source, article.img, article.pub_date, article.link, article.title_en, article.headline_en FROM article INNER JOIN source ON source.id = article.source ORDER BY pub_date DESC LIMIT ?;"
 	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome<Article>({ rs ->
 		Article(
 				title = rs.getString("title").trim(),
@@ -44,6 +46,7 @@ fun loadArticles(limit : Int = 25) : List<Article>
 				source = rs.getString("source"),
 				link = rs.getString("link"),
 				img = rs.getString("img"),
+				pubDate = rs.getDate("pub_date"),
 				titleEn = rs.getString("title_en")?.trim(),
 				headlineEn = rs.getString("headline_en")?.trim()
 		)

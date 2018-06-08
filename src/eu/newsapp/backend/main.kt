@@ -34,12 +34,15 @@ fun main(args : Array<String>)
 		
 		val reader = RssReader()
 		val articles = reader.read(source.rss).filter { !articleHashExists(it.hash) }
-		articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
-			val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate("DE").parseBatch()
-			v.map { it.value }.withIndex().map { (j, article) ->
-				val (title, description) = translated[j]
-				article.enTitle = title
-				article.enDescription = description
+		if (source.language != IsoAlpha2.EN)
+		{
+			articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
+				val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate(source.language).parseBatch()
+				v.map { it.value }.withIndex().map { (j, article) ->
+					val (title, description) = translated[j]
+					article.enTitle = title
+					article.enDescription = description
+				}
 			}
 		}
 		store(articles, source.id)

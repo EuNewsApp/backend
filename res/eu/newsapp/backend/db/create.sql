@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS "source" (
   id BIGINT NOT NULL DEFAULT nextval('source_id_seq'),
   name TEXT NOT NULL,
   country CHARACTER(2) CHECK (upper(country) = country),
+  "language" CHARACTER(2) CHECK (upper("language") = "language"),
   rss TEXT NOT NULL,
   -- primary key
 	CONSTRAINT source_pkey PRIMARY KEY (id),

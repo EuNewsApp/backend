@@ -53,6 +53,6 @@ fun loadArticles(limit : Int = 25) : List<Article>
 fun articleHashExists(hash : String) : Boolean
 {
 	val sql = "SELECT COUNT(*) FROM article WHERE hash = ?;"
-	val count = JdbcSession(source).sql(sql).set(hash).select(SingleOutcome<Int>(Integer.TYPE))
-	return count == 0
+	val count = JdbcSession(source).sql(sql).set(hash).select(SingleOutcome<String>(String::class.java)).toInt()
+	return count != 0
 }

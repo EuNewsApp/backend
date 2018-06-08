@@ -22,7 +22,7 @@ fun main(args : Array<String>)
 	val reader = RssReader()
 	val articles = reader.read("https://spiegel.de/index.rss")
 	articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
-		val translated = translate(v.map { (j, article) -> article.title to article.description }.buildBatch()).parseBatch()
+		val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate("DE").parseBatch()
 		v.map { it.value }.withIndex().map { (j, article) ->
 			val (title, description) = translated[j]
 			article.enTitle = title

@@ -16,11 +16,11 @@ val translateClient: AmazonTranslate by lazy {
         .build()
 }
 
-fun translate(text: String): String {
+fun String.translate(sourceLanguage : String): String {
     val request = TranslateTextRequest()
-            .withText(text)
-            .withSourceLanguageCode("en")
-            .withTargetLanguageCode("de")
+            .withText(this)
+            .withSourceLanguageCode(sourceLanguage.toLowerCase())
+            .withTargetLanguageCode("en")
     val result = translateClient.translateText(request)
     return result.translatedText
 }

@@ -18,6 +18,11 @@ data class RssArticle(
 		val pubDate : ZonedDateTime,
 		val enclosureUrl : String?
 )
+{
+	var enTitle : String? = null
+	var enDescription : String? = null
+	
+}
 
 class RssReader(val hints : RssReaderHints = DefaultRssReaderHints)
 {

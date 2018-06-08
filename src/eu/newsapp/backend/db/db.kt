@@ -41,7 +41,7 @@ fun initDB()
 
 fun store(articles : List<RssArticle>, sourceId : Long)
 {
-	val sql = "INSERT INTO article (title, headline, source, img, pub_date) VALUES (?, ?, ?, ?, ?::timestamp);"
+	val sql = """INSERT INTO article (title, headline, source, img, pub_date, "title-en", "headline-en") VALUES (?, ?, ?, ?, ?::timestamp, ?, ?);"""
 	articles.forEach { article ->
 		JdbcSession(source).sql(sql)
 				.set(article.title)
@@ -49,13 +49,15 @@ fun store(articles : List<RssArticle>, sourceId : Long)
 				.set(sourceId)
 				.set(article.enclosureUrl)
 				.set(article.pubDate.let { dtf.format(it) })
+				.set(article.enTitle)
+				.set(article.enDescription)
 				.execute()
 	}
 }
 
 fun loadArticles(limit : Int = 25) : List<Article>
 {
-	val sql = "SELECT article.title, article.headline, source.country, source.name AS source, article.img FROM article INNER JOIN source ON source.id = article.source ORDER BY pub_date DESC LIMIT ?;"
+	val sql = """SELECT article.title, article.headline, source.country, source.name AS source, article.img, article."title-en", article."headline-en" FROM article INNER JOIN source ON source.id = article.source ORDER BY pub_date DESC LIMIT ?;"""
 	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome<Article>({ rs ->
 		Article(
 				title = rs.getString("title"),
@@ -63,7 +65,9 @@ fun loadArticles(limit : Int = 25) : List<Article>
 				country = rs.getString("country").let { enumValueOf<IsoAlpha2>(it) },
 				source = rs.getString("source"),
 				link = "FAKE://TODO",
-				img = rs.getString("img")
+				img = rs.getString("img"),
+				`title-en` = rs.getString("title-en"),
+				`headline-en` = rs.getString("headline-en")
 		)
 	}))
 }

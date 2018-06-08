@@ -25,10 +25,8 @@ fun translate(text: String): String {
     return result.translatedText
 }
 
-fun buildBatch(toTranslate: List<Pair<String, String>>): String {
-    return toTranslate.joinToString("☰") { (title, headline) ->
-        "$title☲$headline"
-    }
+fun List<Pair<String, String>>.buildBatch() = joinToString("☰") { (title, headline) ->
+    "$title☲$headline"
 }
 
 fun String.parseBatch(): List<Pair<String, String>> {

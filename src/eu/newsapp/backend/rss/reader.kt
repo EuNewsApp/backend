@@ -4,6 +4,7 @@ import com.rometools.rome.io.SyndFeedInput
 import eu.newsapp.backend.toHex
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
@@ -37,6 +38,8 @@ data class RssArticle(
 
 class RssReader(val hints : RssReaderHints = DefaultRssReaderHints)
 {
+	private fun String.sanitize() : String = Jsoup.parse(this).text()
+	
 	fun read(url : String) : List<RssArticle>
 	{
 		logger.info("Reading RSS from $url ...")
@@ -53,7 +56,7 @@ class RssReader(val hints : RssReaderHints = DefaultRssReaderHints)
 			RssArticle(
 					title = it.title,
 					link = it.link,
-					description = it.description?.value ?: "",
+					description = it.description?.value?.sanitize() ?: "",
 					pubDate = it.publishedDate.toInstant().atZone(ZoneId.systemDefault()),
 					enclosureUrl = it.enclosures.firstOrNull()?.url
 			)

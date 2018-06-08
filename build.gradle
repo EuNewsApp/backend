@@ -15,6 +15,7 @@ buildscript {
     ext.jettyVersion = '9.4.9.v20180320'
     ext.jodaVersion = '2.9.9'
     ext.jschVersion = '0.1.54'
+    ext.jsoupVersion = '1.11.3'
     ext.jtarVersion = '2.3'
     ext.klaxonVersion = '0.32'
     ext.kotlinVersion = '1.2.41'
@@ -72,7 +73,8 @@ dependencies {
     compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
     compile "ch.qos.logback:logback-classic:$logbackVersion"
     compile "commons-io:commons-io:$commonsIoVersion"
-
+    compile "org.jsoup:jsoup:$jsoupVersion"
+    
     compile "com.sparkjava:spark-core:$sparkVersion"
     compile "org.eclipse.jetty:jetty-server:$jettyVersion"
     compile "org.eclipse.jetty:jetty-webapp:$jettyVersion"

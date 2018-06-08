@@ -9,6 +9,7 @@ buildscript {
     ext.exposedVersion = '0.9.1'
     ext.freemarkerVersion = '2.3.28'
     ext.hikariVersion = '3.1.0'
+    ext.jacksonVersion = '2.9.5'
     ext.jettyVersion = '9.4.9.v20180320'
     ext.jodaVersion = '2.9.9'
     ext.jschVersion = '0.1.54'
@@ -59,6 +60,7 @@ dependencies {
     compile "org.eclipse.jetty:jetty-webapp:$jettyVersion"
     compile "org.eclipse.jetty.websocket:websocket-server:$jettyVersion"
     compile "com.sparkjava:spark-template-freemarker:$sparkVersion"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
     
     testCompile "org.testng:testng:$testngVersion"
 }

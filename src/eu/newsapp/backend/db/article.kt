@@ -3,6 +3,8 @@ package eu.newsapp.backend.db
 import java.util.Date
 import com.jcabi.jdbc.*
 import eu.newsapp.backend.IsoAlpha2
+import eu.newsapp.backend.classification.categoriesToList
+import eu.newsapp.backend.classification.classifyArticle
 import eu.newsapp.backend.rss.RssArticle
 
 data class Article(
@@ -14,7 +16,8 @@ data class Article(
 		val img : String?,
 		val pubDate : Date,
 		val titleEn : String? = null,
-		val headlineEn : String? = null
+		val headlineEn : String? = null,
+		val categories : List<String>
 )
 
 fun store(articles : List<RssArticle>, sourceId : Long)
@@ -31,6 +34,7 @@ fun store(articles : List<RssArticle>, sourceId : Long)
 				.set(article.pubDate.let { dtf.format(it) })
 				.set(article.enTitle)
 				.set(article.enDescription)
+				.set(classifyArticle(article.enTitle ?: article.title, article.enDescription ?: article.description))
 				.execute()
 	}
 }
@@ -48,7 +52,8 @@ fun loadArticles(limit : Int = 25) : List<Article>
 				img = rs.getString("img"),
 				pubDate = rs.getDate("pub_date"),
 				titleEn = rs.getString("title_en")?.trim(),
-				headlineEn = rs.getString("headline_en")?.trim()
+				headlineEn = rs.getString("headline_en")?.trim(),
+				categories = categoriesToList(rs.getString("categories"))
 		)
 	}))
 }

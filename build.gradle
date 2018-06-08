@@ -89,6 +89,8 @@ dependencies {
     
     compile 'com.amazonaws:aws-java-sdk-core:1.11.288'
     compile 'com.amazonaws:aws-java-sdk-translate:1.11.288'
+
+    compile 'com.google.cloud:google-cloud-language:1.31.0'
     
     testCompile "org.testng:testng:$testngVersion"
 }

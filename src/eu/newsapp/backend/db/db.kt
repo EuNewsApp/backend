@@ -22,6 +22,12 @@ val source : DataSource by lazy {
 fun initDB()
 {
 	val clazz = MethodHandles.lookup().lookupClass()
-	val sql = IOUtils.toString(clazz.getResourceAsStream("create.sql"), UTF_8)
-	JdbcSession(source).sql(sql).execute()
+	
+	// create the database
+	val createSql = IOUtils.toString(clazz.getResourceAsStream("create.sql"), UTF_8)
+	JdbcSession(source).sql(createSql).execute()
+	
+	// seed the database with some sources
+	val sourcesSql = IOUtils.toString(clazz.getResourceAsStream("sources.sql"), UTF_8)
+	JdbcSession(source).sql(sourcesSql).execute()
 }

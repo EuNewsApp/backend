@@ -11,6 +11,7 @@ CREATE SEQUENCE IF NOT EXISTS "source_id_seq"
 CREATE TABLE IF NOT EXISTS "source" (
   id BIGINT NOT NULL DEFAULT nextval('source_id_seq'),
   name TEXT NOT NULL,
+  country CHARACTER(2) CHECK (upper(country) = country),
   rss TEXT NOT NULL,
   -- primary key
 	CONSTRAINT source_pkey PRIMARY KEY (id),
@@ -32,7 +33,6 @@ CREATE TABLE IF NOT EXISTS "article" (
 	id BIGINT NOT NULL DEFAULT nextval('article_id_seq'),
 	title TEXT NOT NULL,
 	headline TEXT NOT NULL,
-	country CHARACTER(2),
 	source BIGINT NOT NULL,
 	guid TEXT NOT NULL,
 	img TEXT NOT NULL,

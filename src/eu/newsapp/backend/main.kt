@@ -46,5 +46,6 @@ fun main(args : Array<String>)
 			}
 		}
 		store(articles, source.id)
+		"""{"success":true}"""
 	}
 }

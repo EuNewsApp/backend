@@ -38,14 +38,14 @@ fun loadArticles(limit : Int = 25) : List<Article>
 	val sql = "SELECT article.title, article.headline, source.country, source.name AS source, article.img, article.link, article.title_en, article.headline_en FROM article INNER JOIN source ON source.id = article.source ORDER BY pub_date DESC LIMIT ?;"
 	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome<Article>({ rs ->
 		Article(
-				title = rs.getString("title"),
-				headline = rs.getString("headline"),
+				title = rs.getString("title").trim(),
+				headline = rs.getString("headline").trim(),
 				country = rs.getString("country").let { enumValueOf<IsoAlpha2>(it) },
 				source = rs.getString("source"),
 				link = rs.getString("link"),
 				img = rs.getString("img"),
-				title_en = rs.getString("title_en"),
-				headline_en = rs.getString("headline_en")
+				title_en = rs.getString("title_en").trim(),
+				headline_en = rs.getString("headline_en").trim()
 		)
 	}))
 }

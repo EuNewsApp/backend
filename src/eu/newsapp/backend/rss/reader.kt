@@ -53,7 +53,7 @@ class RssReader(val hints : RssReaderHints = DefaultRssReaderHints)
 			RssArticle(
 					title = it.title,
 					link = it.link,
-					description = it.description.value,
+					description = it.description?.value ?: "",
 					pubDate = it.publishedDate.toInstant().atZone(ZoneId.systemDefault()),
 					enclosureUrl = it.enclosures.firstOrNull()?.url
 			)

@@ -39,9 +39,16 @@ fun main(args : Array<String>)
 			articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
 				val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate(source.language).parseBatch()
 				v.map { it.value }.withIndex().map { (j, article) ->
-					val (title, description) = translated[j]
-					article.enTitle = title
-					article.enDescription = description
+					try
+					{
+						val (title, description) = translated[j]
+						article.enTitle = title
+						article.enDescription = description
+					}
+					catch (ex : Exception)
+					{
+						logger.error("Unable to find translation", ex)
+					}
 				}
 			}
 		}

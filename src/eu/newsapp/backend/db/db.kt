@@ -1,8 +1,10 @@
 package eu.newsapp.backend.db
 
-import com.jcabi.jdbc.JdbcSession
+import com.jcabi.jdbc.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import eu.newsapp.backend.Article
+import eu.newsapp.backend.IsoAlpha2
 import eu.newsapp.backend.rss.RssArticle
 import org.apache.commons.io.IOUtils
 import org.postgresql.ds.PGSimpleDataSource
@@ -49,4 +51,19 @@ fun store(articles : List<RssArticle>, sourceId : Long)
 				.set(article.pubDate.let { dtf.format(it) })
 				.execute()
 	}
+}
+
+fun loadArticles(limit : Int = 25) : List<Article>
+{
+	val sql = "SELECT article.title, article.headline, source.country, source.name AS source, article.img FROM article INNER JOIN source ON source.id = article.source ORDER BY pub_date DESC LIMIT ?;"
+	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome<Article>({ rs ->
+		Article(
+				title = rs.getString("title"),
+				headline = rs.getString("headline"),
+				country = rs.getString("country").let { enumValueOf<IsoAlpha2>(it) },
+				source = rs.getString("source"),
+				link = "FAKE://TODO",
+				img = rs.getString("img")
+		)
+	}))
 }

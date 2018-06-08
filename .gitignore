@@ -1,0 +1,22 @@
+# gradle stuff
+.gradle/
+build/
+classes/
+out/
+
+# intellij stuff
+.idea/
+*.iml
+
+# kde stuff
+.directory
+
+# emacs stuff
+*~
+\#*#
+
+# native
+*.so
+
+# mac stuff
+.DS_Store

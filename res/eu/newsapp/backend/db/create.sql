@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS "article" (
 	pub_date TIMESTAMP WITH TIME ZONE NOT NULL,
 	title_en TEXT,
   headline_en TEXT,
+  classification TEXT NOT NULL DEFAULT '',
 	-- primary key
 	CONSTRAINT article_pkey PRIMARY KEY (id),
 	-- unique constraints

@@ -21,7 +21,7 @@ data class Article(
 		val country : IsoAlpha2,
 		val source : String,
 		val link : String,
-		val img : String,
+		val img : String?,
 		val `title-en` : String? = null,
 		val `headline-en` : String? = null
 )

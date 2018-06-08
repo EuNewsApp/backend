@@ -20,5 +20,6 @@ fun main(args : Array<String>)
 	}
 	
 	val reader = RssReader()
-	reader.read("https://spiegel.de/index.rss")
+	val articles = reader.read("https://spiegel.de/index.rss")
+	println(articles.joinToString("\n"))
 }

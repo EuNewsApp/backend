@@ -35,7 +35,9 @@ fun main(args : Array<String>)
 				?: return@get """{"success":false,"error":"Could not find source with the specified id"}"""
 		
 		val reader = RssReader()
-		val articles = reader.read(source.rss).filter { !articleHashExists(it.hash) }
+		val articles = reader.read(source.rss).filter {
+			!articleHashExists(it.hash) && !articleLinkExists(it.link)
+		}
 		if (source.language != IsoAlpha2.EN)
 		{
 			articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->

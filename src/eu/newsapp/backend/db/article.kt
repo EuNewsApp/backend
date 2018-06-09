@@ -67,6 +67,13 @@ fun articleHashExists(hash : String) : Boolean
 	return count != 0
 }
 
+fun articleLinkExists(link : String) : Boolean
+{
+	val sql = "SELECT COUNT(*) FROM article WHERE link = ?;"
+	val count = JdbcSession(source).sql(sql).set(link).select(SingleOutcome<String>(String::class.java)).toInt()
+	return count != 0
+}
+
 fun Article.updateCategories(categories : String)
 {
 	val sql = "UPDATE article SET classification = ? WHERE id = ?;"

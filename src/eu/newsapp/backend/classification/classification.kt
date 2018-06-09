@@ -37,4 +37,4 @@ fun classifyArticle(title: String, headline: String): String = try {
     ""
 }
 
-fun String.categoriesToList() = if (isBlank()) emptyList() else split("|")
+fun String.categoriesToList() = if (isBlank()) emptyList() else split("|", "/").filter { !it.isBlank() }

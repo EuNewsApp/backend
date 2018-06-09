@@ -53,7 +53,7 @@ fun loadArticles(limit : Int = 25) : List<Article>
 				pubDate = rs.getDate("pub_date"),
 				titleEn = rs.getString("title_en")?.trim(),
 				headlineEn = rs.getString("headline_en")?.trim(),
-				categories = categoriesToList(rs.getString("classification"))
+				categories = rs.getString("classification").categoriesToList()
 		)
 	}))
 }

@@ -12,6 +12,7 @@ enum class IsoAlpha2
 	IR,
 	NL,
 	PL,
+	PT,
 	RO,
 	UK,
 }

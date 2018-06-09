@@ -1,6 +1,8 @@
 package eu.newsapp.backend
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import eu.newsapp.backend.classification.classify
+import eu.newsapp.backend.classification.classifyArticle
 import eu.newsapp.backend.db.*
 import eu.newsapp.backend.rss.RssReader
 import spark.Spark.*
@@ -55,4 +57,13 @@ fun main(args : Array<String>)
 		store(articles, source.id)
 		"""{"success":true}"""
 	}
+	
+	/*
+	val allArticles = loadArticles(1000)
+	allArticles.filter { article ->
+		article.categories.isEmpty()
+	}.forEach { article ->
+		article.updateCategories(article.classify())
+	}
+	*/
 }

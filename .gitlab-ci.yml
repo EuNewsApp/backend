@@ -1,8 +1,7 @@
-
 build:
   image: openjdk:8
   stage: build
-  scripts:
+  script:
     - ./gradlew build
   artifacts:
     paths:

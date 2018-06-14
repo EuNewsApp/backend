@@ -1,0 +1,10 @@
+
+build:
+  image: openjdk:8
+  stage: build
+  scripts:
+    - ./gradlew build
+  artifacts:
+    paths:
+      - build/distributions/backend-0.1.0-SNAPSHOT.tar
+      - build/distributions/backend-0.1.0-SNAPSHOT.zip

@@ -1,8 +1,6 @@
 package eu.newsapp.backend
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import eu.newsapp.backend.classification.classify
-import eu.newsapp.backend.classification.classifyArticle
 import eu.newsapp.backend.db.*
 import eu.newsapp.backend.rss.RssReader
 import spark.Spark.*
@@ -41,13 +39,13 @@ fun main(args : Array<String>)
 		if (source.language != IsoAlpha2.EN)
 		{
 			articles.withIndex().groupBy { (i, v) -> i / 5 }.forEach { (i, v) ->
-				val translated = v.map { (j, article) -> article.title to article.description }.buildBatch().translate(source.language).parseBatch()
+				val translated = v.map { (j, article) -> article.headline to article.teaser }.buildBatch().translate(source.language).parseBatch()
 				v.map { it.value }.withIndex().map { (j, article) ->
 					try
 					{
 						val (title, description) = translated[j]
-						article.enTitle = title
-						article.enDescription = description
+						//article.enTitle = title
+						//article.enDescription = description
 					}
 					catch (ex : Exception)
 					{

@@ -14,27 +14,23 @@ private val logger : Logger = LoggerFactory.getLogger("eu.newsapp.backend.classi
 val confidenceThreshold = 0.5
 
 val language : LanguageServiceClient by lazy {
-    LanguageServiceClient.create()
+	LanguageServiceClient.create()
 }
 
-fun Article.classify() = classifyArticle(titleEn ?: title, headlineEn ?: headline)
-
-fun classifyArticle(title: String, headline: String): String = try {
+fun classifyArticle(title: String, headline: String) : List<String> = try {
 	logger.info("Classifying article '$title' ...")
-    val doc : Document = Document.newBuilder().setContent(title + " " + headline).setType(Type.PLAIN_TEXT).build()
-    val request : ClassifyTextRequest = ClassifyTextRequest.newBuilder().setDocument(doc).build()
-    val response : ClassifyTextResponse = language.classifyText(request)
+	val doc : Document = Document.newBuilder().setContent("$title $headline").setType(Type.PLAIN_TEXT).build()
+	val request : ClassifyTextRequest = ClassifyTextRequest.newBuilder().setDocument(doc).build()
+	val response : ClassifyTextResponse = language.classifyText(request)
 
 	logger.info("Classified: ${response.categoriesList.joinToString { "${it.name} (${it.confidence})" }}")
 	
-    response.categoriesList.filter { category ->
-        category.confidence > confidenceThreshold
-    }.joinToString("|") { category ->
-        category.name
-    }
+	response.categoriesList.filter { category ->
+		category.confidence > confidenceThreshold
+	}.map { category ->
+		category.name
+	}
 } catch (ex : Exception) {
-    logger.error("Error while classifying '$title'", ex)
-    ""
+	logger.error("Error while classifying '$title'", ex)
+	emptyList()
 }
-
-fun String.categoriesToList() = if (isBlank()) emptyList() else split("|", "/").filter { !it.isBlank() }

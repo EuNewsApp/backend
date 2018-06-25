@@ -20,23 +20,20 @@ val okhttpClient by lazy {
 }
 
 data class RssArticle(
-		val title : String,
+		val headline : String,
+		val teaser : String,
 		val link : String,
-		val description : String,
 		val pubDate : ZonedDateTime,
 		val enclosureUrl : String?
 )
 {
-	var enTitle : String? = null
-	var enDescription : String? = null
-	
 	val hash get() = run {
 		val digest = MessageDigest.getInstance("SHA-256")
-		digest.digest(title.toByteArray(UTF_8)).toHex()
+		digest.digest(headline.toByteArray(UTF_8)).toHex()
 	}
 }
 
-class RssReader(val hints : RssReaderHints = DefaultRssReaderHints)
+class RssReader
 {
 	private fun String.sanitize() : String = Jsoup.parse(this).text()
 	
@@ -54,22 +51,12 @@ class RssReader(val hints : RssReaderHints = DefaultRssReaderHints)
 		logger.debug("RSS Parsing finished")
 		return feed.entries.map {
 			RssArticle(
-					title = it.title,
+					headline = it.title,
+					teaser = it.description?.value?.sanitize() ?: "",
 					link = it.link,
-					description = it.description?.value?.sanitize() ?: "",
 					pubDate = it.publishedDate.toInstant().atZone(ZoneId.systemDefault()),
 					enclosureUrl = it.enclosures.firstOrNull()?.url
 			)
 		}
 	}
-}
-
-interface RssReaderHints
-{
-	
-}
-
-object DefaultRssReaderHints : RssReaderHints
-{
-	
 }

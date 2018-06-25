@@ -7,6 +7,7 @@ import eu.newsapp.backend.rss.RssArticle
 import org.apache.commons.io.IOUtils
 import org.postgresql.ds.PGSimpleDataSource
 import java.lang.invoke.MethodHandles
+import java.sql.ResultSet
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.sql.DataSource
@@ -17,9 +18,10 @@ internal val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S z", Locale
 val source : DataSource by lazy {
 	val cfg = HikariConfig()
 	cfg.dataSource = PGSimpleDataSource().apply {
-		databaseName = "eunewsapp"
+		databaseName = "eunify"
 		serverName = "localhost"
 		user = "postgres"
+		password = "postgres"
 	}
 	HikariDataSource(cfg)
 }
@@ -35,4 +37,12 @@ fun initDB()
 	// seed the database with some sources
 	val sourcesSql = IOUtils.toString(clazz.getResourceAsStream("sources.sql"), UTF_8)
 	JdbcSession(source).sql(sourcesSql).execute()
+}
+
+abstract class ListOutcomeMapping<T> : ListOutcome.Mapping<T>
+{
+	abstract fun map(rs : ResultSet, prefix : String) : T
+	
+	override fun map(rs : ResultSet) : T
+		= map(rs, prefix = "")
 }

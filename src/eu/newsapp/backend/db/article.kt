@@ -1,63 +1,73 @@
 package eu.newsapp.backend.db
 
-import java.util.Date
 import com.jcabi.jdbc.*
 import eu.newsapp.backend.IsoAlpha2
-import eu.newsapp.backend.classification.categoriesToList
-import eu.newsapp.backend.classification.classifyArticle
 import eu.newsapp.backend.rss.RssArticle
+import java.sql.ResultSet
+import java.time.LocalDateTime
 
 data class Article(
 		val id : Long,
-		val title : String,
+		val hash : String,
 		val headline : String,
+		val teaser : String,
+		val sourceName : String,
+		val sourceId : Long,
 		val country : IsoAlpha2,
-		val source : String,
+		val language : IsoAlpha2,
 		val link : String,
 		val img : String?,
-		val pubDate : Date,
-		val titleEn : String? = null,
-		val headlineEn : String? = null,
-		val categories : List<String>
+		val pubDate : LocalDateTime,
+		val isTranslated : Boolean,
+		val isClassified : Boolean,
+		val isPublished : Boolean
 )
+
+private object ArticleOutcomeMapping : ListOutcomeMapping<Article>()
+{
+	const val SELECT = "SELECT article.id, article.hash, article.headline, article.teaser, source.name AS s_name, " +
+			"source.id AS s_id, source.country AS s_country, source.language AS s_language, article.link, article.img, " +
+			"article.pub_date, article.is_translated, article.is_classified, article.is_published " +
+			"FROM article INNER JOIN source ON source.id = article.source"
+	
+	override fun map(rs : ResultSet, prefix : String) = Article(
+			id = rs.getLong("${prefix}id"),
+			hash = rs.getString("${prefix}hash"),
+			headline = rs.getString("${prefix}headline"),
+			teaser = rs.getString("${prefix}teaser"),
+			sourceName = rs.getString("${prefix}s_name"),
+			sourceId = rs.getLong("${prefix}s_id"),
+			country = rs.getString("${prefix}s_country").let { enumValueOf<IsoAlpha2>(it) },
+			language = rs.getString("${prefix}s_language").let { enumValueOf<IsoAlpha2>(it) },
+			link = rs.getString("${prefix}link"),
+			img = rs.getString("${prefix}img"),
+			pubDate = rs.getTimestamp("${prefix}pub_date").toLocalDateTime(),
+			isTranslated = rs.getBoolean("is_translated"),
+			isClassified = rs.getBoolean("is_classified"),
+			isPublished = rs.getBoolean("is_published")
+	)
+}
 
 fun store(articles : List<RssArticle>, sourceId : Long)
 {
-	val sql = "INSERT INTO article (hash, title, headline, source, link, img, pub_date, title_en, headline_en, classification) VALUES (?, ?, ?, ?, ?, ?, ?::timestamp, ?, ?, ?);"
+	val sql = "INSERT INTO article (hash, headline, teaser, source, link, img, pub_date) VALUES (?, ?, ?, ?, ?, ?::timestamp);"
 	articles.forEach { article ->
 		JdbcSession(source).sql(sql)
 				.set(article.hash)
-				.set(article.title)
-				.set(article.description)
+				.set(article.headline)
+				.set(article.teaser)
 				.set(sourceId)
 				.set(article.link)
 				.set(article.enclosureUrl)
 				.set(article.pubDate.let { dtf.format(it) })
-				.set(article.enTitle)
-				.set(article.enDescription)
-				.set(classifyArticle(article.enTitle ?: article.title, article.enDescription ?: article.description))
 				.execute()
 	}
 }
 
 fun loadArticles(limit : Int = 25) : List<Article>
 {
-	val sql = "SELECT article.id, article.title, article.headline, source.country, source.name AS source, article.img, article.pub_date, article.link, article.title_en, article.headline_en, article.classification FROM article INNER JOIN source ON source.id = article.source ORDER BY pub_date DESC LIMIT ?;"
-	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome<Article>({ rs ->
-		Article(
-				id = rs.getLong("id"),
-				title = rs.getString("title").trim(),
-				headline = rs.getString("headline").trim(),
-				country = rs.getString("country").let { enumValueOf<IsoAlpha2>(it) },
-				source = rs.getString("source"),
-				link = rs.getString("link"),
-				img = rs.getString("img"),
-				pubDate = rs.getTimestamp("pub_date"),
-				titleEn = rs.getString("title_en")?.trim(),
-				headlineEn = rs.getString("headline_en")?.trim(),
-				categories = rs.getString("classification").categoriesToList()
-		)
-	}))
+	val sql = "${ArticleOutcomeMapping.SELECT} ORDER BY pub_date DESC LIMIT ?;"
+	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome<Article>(ArticleOutcomeMapping))
 }
 
 fun articleHashExists(hash : String) : Boolean
@@ -72,10 +82,4 @@ fun articleLinkExists(link : String) : Boolean
 	val sql = "SELECT COUNT(*) FROM article WHERE link = ?;"
 	val count = JdbcSession(source).sql(sql).set(link).select(SingleOutcome<String>(String::class.java)).toInt()
 	return count != 0
-}
-
-fun Article.updateCategories(categories : String)
-{
-	val sql = "UPDATE article SET classification = ? WHERE id = ?;"
-	JdbcSession(eu.newsapp.backend.db.source).sql(sql).set(categories).set(id).execute()
 }

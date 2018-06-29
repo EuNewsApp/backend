@@ -50,7 +50,7 @@ private object ArticleOutcomeMapping : ListOutcomeMapping<Article>()
 
 fun store(articles : List<RssArticle>, sourceId : Long)
 {
-	val sql = "INSERT INTO article (hash, headline, teaser, source, link, img, pub_date) VALUES (?, ?, ?, ?, ?, ?::timestamp);"
+	val sql = "INSERT INTO article (hash, headline, teaser, source, link, img, pub_date) VALUES (?, ?, ?, ?, ?, ?, ?::timestamp);"
 	articles.forEach { article ->
 		JdbcSession(source).sql(sql)
 				.set(article.hash)
@@ -74,6 +74,13 @@ fun articleHashExists(hash : String) : Boolean
 {
 	val sql = "SELECT COUNT(*) FROM article WHERE hash = ?;"
 	val count = JdbcSession(source).sql(sql).set(hash).select(SingleOutcome<String>(String::class.java)).toInt()
+	return count != 0
+}
+
+fun articleExists(sourceId : Long, hash : String) : Boolean
+{
+	val sql = "SELECT COUNT(*) FROM article WHERE source = ? AND hash = ?;"
+	val count = JdbcSession(source).sql(sql).set(sourceId).set(hash).select(SingleOutcome<String>(String::class.java)).toInt()
 	return count != 0
 }
 

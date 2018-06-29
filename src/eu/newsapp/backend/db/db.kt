@@ -18,11 +18,12 @@ internal val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S z", Locale
 val source : DataSource by lazy {
 	val cfg = HikariConfig()
 	cfg.dataSource = PGSimpleDataSource().apply {
-		databaseName = "eunify"
-		serverName = "localhost"
-		user = "postgres"
-		password = "postgres"
+		databaseName = "sopzzzbk"
+		serverName = "packy.db.elephantsql.com"
+		user = "sopzzzbk"
+		password = "2LOsAMMzgYVaVqWEWFzXwPnmqSyaMDsf"
 	}
+	cfg.maximumPoolSize = 2
 	HikariDataSource(cfg)
 }
 

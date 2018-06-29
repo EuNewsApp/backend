@@ -19,8 +19,10 @@
 package eu.newsapp.backend.daemon
 
 import eu.newsapp.backend.db.*
+import eu.newsapp.backend.publishToKibana
 import eu.newsapp.backend.rss.RssReader
 import java.lang.Runtime.*
+import java.time.ZonedDateTime
 import java.util.TimerTask
 import kotlin.concurrent.fixedRateTimer
 
@@ -50,22 +52,37 @@ private fun TimerTask.execDaemon()
 	
 	// filter articles to check that they are new
 	val newArticles = filteredArticles.filterNot { (sourceId, article) ->
-		articleExists(sourceId, article.hash)
+		articleExists(sourceId, article.hash) || articleLinkExists(article.link) // TODO update if link exist instead of ignore
 	}
 	
-	// store new articles
-	newArticles.groupBy { (sourceId, _) ->
+	// group articles by source
+	val articlesBySource = newArticles.groupBy { (sourceId, _) ->
 		sourceId
 	}.mapValues { (_, articleList) ->
 		articleList.map { (_, article) ->
 			article
 		}
-	}.forEach { (sourceId, articleList) ->
+	}
+	
+	// store new articles
+	articlesBySource.forEach { (sourceId, articleList) ->
 		store(articleList, sourceId)
 	}
 	
 	// log
 	println("Scraping successful, {'articles':${articles.size}, 'filteredArticles':${filteredArticles.size}, 'newArticles':${newArticles.size}}")
+	
+	// store scrape log
+	val scrapeLog = ScrapeLog(
+			timestamp = ZonedDateTime.now(),
+			articlesTotal = articles.size,
+			articlesIncluded = filteredArticles.size,
+			articlesNew = newArticles.size
+	)
+	val scrapeLogId = insertScrapeLog(scrapeLog)
+	
+	// publish to kibana
+	scrapeLog.publishToKibana(scrapeLogId)
 }
 
 fun startDaemon()

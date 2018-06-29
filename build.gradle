@@ -92,6 +92,10 @@ dependencies {
 
     compile 'com.google.cloud:google-cloud-language:1.31.0'
     
+    compile 'org.elasticsearch:elasticsearch:6.3.0'
+    compile 'org.elasticsearch.client:transport:6.3.0'
+    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.3.0'
+    
     testCompile "org.testng:testng:$testngVersion"
 }
 

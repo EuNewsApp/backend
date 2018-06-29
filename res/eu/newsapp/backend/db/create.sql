@@ -132,14 +132,11 @@ CREATE SEQUENCE IF NOT EXISTS "log_seq"
 CREATE TABLE IF NOT EXISTS "scrape_log" (
   id BIGINT NOT NULL DEFAULT nextval('log_seq'),
   timestamp TIMESTAMP NOT NULL DEFAULT now(),
-  source BIGINT NOT NULL,
   articles_total INTEGER NOT NULL,
   articles_included INTEGER NOT NULL,
   articles_new INTEGER NOT NULL,
   -- primary key
-  CONSTRAINT scrape_log_pkey PRIMARY KEY (id),
-  -- foreign keys
-  FOREIGN KEY (source) REFERENCES "source"(id) ON DELETE CASCADE
+  CONSTRAINT scrape_log_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS "translation_log" (

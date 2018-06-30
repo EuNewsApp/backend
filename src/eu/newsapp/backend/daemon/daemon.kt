@@ -19,7 +19,7 @@
 package eu.newsapp.backend.daemon
 
 import eu.newsapp.backend.db.*
-import eu.newsapp.backend.publishToKibana
+import eu.newsapp.backend.publishToElasticsearch
 import eu.newsapp.backend.rss.RssReader
 import java.lang.Runtime.*
 import java.time.ZonedDateTime
@@ -81,8 +81,8 @@ private fun TimerTask.execDaemon()
 	)
 	val scrapeLogId = insertScrapeLog(scrapeLog)
 	
-	// publish to kibana
-	scrapeLog.publishToKibana(scrapeLogId)
+	// publish to elasticsearch
+	scrapeLog.publishToElasticsearch(scrapeLogId)
 }
 
 fun startDaemon()

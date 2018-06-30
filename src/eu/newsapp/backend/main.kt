@@ -1,14 +1,36 @@
 package eu.newsapp.backend
 
+import com.bugsnag.Bugsnag
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import eu.newsapp.backend.Configuration.elasticsearch
 import eu.newsapp.backend.daemon.startDaemon
 import eu.newsapp.backend.db.*
 import eu.newsapp.backend.rss.RssReader
+import org.slf4j.LoggerFactory
+import org.slf4j.bridge.SLF4JBridgeHandler
 import spark.Spark.*
+import java.time.LocalDate
+
+private val logger = LoggerFactory.getLogger("eu.newsapp.backend")
+
+val bugsnag by lazy {
+	Bugsnag(Configuration.bugsnag.key)
+}
 
 fun main(args : Array<String>)
 {
+	SLF4JBridgeHandler.removeHandlersForRootLogger()
+	SLF4JBridgeHandler.install()
+	
+	Configuration.loadConfig(args.getOrNull(0))
+	
+	bugsnag.setAppVersion(LocalDate.now().toString())
+	bugsnag.setReleaseStage("staging")
+	bugsnag.setSendThreads(true)
+	
 	initDB()
+	
+	setElasticsearchCredentials(elasticsearch.username, elasticsearch.password)
 	
 	port(8706)
 

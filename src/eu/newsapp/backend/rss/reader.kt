@@ -1,6 +1,7 @@
 package eu.newsapp.backend.rss
 
 import com.rometools.rome.io.SyndFeedInput
+import eu.newsapp.backend.okhttpClient
 import eu.newsapp.backend.toHex
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,10 +15,6 @@ import java.time.ZonedDateTime
 import kotlin.text.Charsets.UTF_8
 
 private val logger : Logger = LoggerFactory.getLogger(RssReader::class.java)
-
-val okhttpClient by lazy {
-	OkHttpClient()
-}
 
 data class RssArticle(
 		val headline : String,

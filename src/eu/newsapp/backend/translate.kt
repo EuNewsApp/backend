@@ -9,7 +9,7 @@ import com.amazonaws.services.translate.model.TranslateTextRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-val logger : Logger = LoggerFactory.getLogger("eu.newsapp.backend.Translate")
+private val logger : Logger = LoggerFactory.getLogger("eu.newsapp.backend.Translate")
 
 val translateClient: AmazonTranslate by lazy {
     val awsCreds = ProfileCredentialsProvider().credentials

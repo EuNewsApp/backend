@@ -1,5 +1,32 @@
 package eu.newsapp.backend
 
+import devcsrj.okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.*
+import okhttp3.CookieJar
+import java.util.ArrayList
+import java.util.HashMap
+
+val okhttpClient by lazy {
+	OkHttpClient.Builder()
+			.cookieJar(OkHttpCookieJar)
+			.addInterceptor(HttpLoggingInterceptor())
+			.build()
+}
+
+private object OkHttpCookieJar : CookieJar
+{
+	private val cookieStore : MutableMap<String, List<Cookie>> = HashMap()
+	
+	override fun saveFromResponse(url : HttpUrl, cookies : List<Cookie>)
+	{
+		cookieStore[url.host()] = cookies
+	}
+	
+	override fun loadForRequest(url : HttpUrl) : List<Cookie>
+			= cookieStore[url.host()] ?: ArrayList<Cookie>()
+}
+
+
 private val HEX_CHARS = "0123456789ABCDEF".toCharArray()
 
 fun ByteArray.toHex() : String{

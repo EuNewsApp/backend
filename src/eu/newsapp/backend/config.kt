@@ -30,6 +30,18 @@ object Configuration
 {
 	private val logger : Logger = LoggerFactory.getLogger(Configuration::class.java)
 	
+	class Algolia
+	{
+		@JsonProperty
+		var application = ""
+		
+		@JsonProperty
+		var key = ""
+		
+		@JsonProperty
+		var index = "articles"
+	}
+	
 	class AWSKey
 	{
 		@JsonProperty
@@ -90,6 +102,9 @@ object Configuration
 	private class Root
 	{
 		@JsonProperty
+		var algolia = Algolia()
+		
+		@JsonProperty
 		var aws = AWS()
 		
 		@JsonProperty
@@ -104,6 +119,7 @@ object Configuration
 	
 	private var root = Root()
 	
+	val algolia get() = root.algolia
 	val aws get() = root.aws
 	val bugsnag get() = root.bugsnag
 	val db get() = root.db

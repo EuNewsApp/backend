@@ -19,6 +19,7 @@
 package eu.newsapp.backend.daemon
 
 import eu.newsapp.backend.*
+import eu.newsapp.backend.algolia.publishToAlgolia
 import eu.newsapp.backend.db.*
 import eu.newsapp.backend.rss.*
 import org.slf4j.*
@@ -154,6 +155,17 @@ private fun TimerTask.execDaemon()
 					characterCount = batch.length
 			).insert()
 		}
+	}
+	
+	// publish articles to algolia
+	newArticles.forEach { (sourceId, rssArticle) ->
+		// find source, article & translations
+		val source = loadSource(sourceId) ?: return@forEach
+		val article = loadArticle(rssArticle.hash) ?: return@forEach
+		val translations = loadTranslation(article.id)
+		
+		// publish to algolia
+		publishToAlgolia(article, source, translations)
 	}
 }
 

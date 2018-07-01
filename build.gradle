@@ -2,6 +2,7 @@ group 'eu.newsapp.backend'
 version '0.1.0-SNAPSHOT'
 
 buildscript {
+    ext.algoliaVersion = '2.17.3'
     ext.commonsCodecVersion = '1.11'
     ext.commonsCsvVersion = '1.5'
     ext.commonsEmailVersion = '1.5'
@@ -96,6 +97,8 @@ dependencies {
     compile 'com.amazonaws:aws-java-sdk-translate:1.11.288'
 
     compile 'com.google.cloud:google-cloud-language:1.31.0'
+    
+    compile "com.algolia:algoliasearch:$algoliaVersion"
     
     testCompile "org.testng:testng:$testngVersion"
 }

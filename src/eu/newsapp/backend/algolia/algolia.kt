@@ -57,9 +57,8 @@ data class AlgoliaArticle(
 		val categories : List<String>
 )
 
-fun publishToAlgolia(article : Article, source : Source, translations : List<Translation>)
-{
-	algoliaIndex.addObject(AlgoliaArticle(
+fun publishToAlgolia(article : Article, source : Source, translations : List<Translation>) : String
+	= algoliaIndex.addObject(AlgoliaArticle(
 			headline = article.headline,
 			teaser = article.teaser,
 			source = AlgoliaSource(
@@ -77,5 +76,4 @@ fun publishToAlgolia(article : Article, source : Source, translations : List<Tra
 				)
 			}.toMap(),
 			categories = emptyList() // TODO
-	))
-}
+	)).objectID

@@ -165,7 +165,10 @@ private fun TimerTask.execDaemon()
 		val translations = loadTranslation(article.id)
 		
 		// publish to algolia
-		publishToAlgolia(article, source, translations)
+		val algoliaId = publishToAlgolia(article, source, translations)
+		
+		// log to elasticsearch
+		publishArticleToElasticsearch(article, translations, algoliaId)
 	}
 }
 

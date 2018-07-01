@@ -19,7 +19,7 @@
 package eu.newsapp.backend
 
 import com.beust.klaxon.JsonObject
-import eu.newsapp.backend.db.ScrapeLog
+import eu.newsapp.backend.db.*
 import okhttp3.*
 import org.slf4j.LoggerFactory
 import java.time.format.DateTimeFormatter
@@ -48,6 +48,30 @@ fun ScrapeLog.publishToElasticsearch(id : Long) = try {
 	logger.info("publishing to elasticsearch: ${data.toJsonString()}")
 	val req = okhttpClient.newCall(Request.Builder()
 			.url("$ES_PUSH_URL/scrape/scrape/$id")
+			.header("Authorization", credentials)
+			.post(RequestBody.create(JSON, data.toJsonString()))
+			.build())
+	val res = req.execute()
+	res.close()
+} catch (ex : Exception) {
+	logger.error("Error publishing to elasticsearch", ex)
+}
+
+fun publishArticleToElasticsearch(article : Article, translations : List<Translation>, algoliaId : String) = try {
+	val data = JsonObject(mapOf(
+			"charactersBeforeTranslation" to (article.headline.length + article.teaser.length),
+			"charactersAfterTranslation" to translations.find {
+				it.language == IsoAlpha2.EN
+			}?.let {
+				it.headline.length + it.teaser.length
+			},
+			"language" to article.language.name,
+			"country" to article.country.name,
+			"timestamp" to System.currentTimeMillis()
+	))
+	logger.info("publishing to elasticsearch: ${data.toJsonString()}")
+	val req = okhttpClient.newCall(Request.Builder()
+			.url("$ES_PUSH_URL/article/article/$algoliaId")
 			.header("Authorization", credentials)
 			.post(RequestBody.create(JSON, data.toJsonString()))
 			.build())

@@ -21,7 +21,7 @@ val source : DataSource by lazy {
 	val cfg = HikariConfig()
 	cfg.dataSource = PGSimpleDataSource().apply {
 		databaseName = Configuration.db.name
-		serverName = Configuration.db.name
+		serverName = Configuration.db.host
 		portNumber = Configuration.db.port
 		user = Configuration.db.username
 		password = Configuration.db.password

@@ -42,7 +42,6 @@ data class AlgoliaSource(
 )
 
 data class AlgoliaTranslation(
-		val language : String,
 		val headline : String,
 		val teaser : String
 )
@@ -54,7 +53,7 @@ data class AlgoliaArticle(
 		val link : String,
 		val img : String?,
 		val pubDate : Long,
-		val translations : List<AlgoliaTranslation>,
+		val translations : Map<String, AlgoliaTranslation>,
 		val categories : List<String>
 )
 
@@ -71,11 +70,12 @@ fun publishToAlgolia(article : Article, source : Source, translations : List<Tra
 			link = article.link,
 			img = article.img,
 			pubDate = article.pubDate.atZone(ZoneId.systemDefault()).toInstant().let { Date.from(it) }.time,
-			translations = translations.map { AlgoliaTranslation(
-					language = it.language.name,
-					teaser = it.teaser,
-					headline = it.headline
-			) },
+			translations = translations.map {
+				it.language.name to AlgoliaTranslation(
+						teaser = it.teaser,
+						headline = it.headline
+				)
+			}.toMap(),
 			categories = emptyList() // TODO
 	))
 }

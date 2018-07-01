@@ -54,7 +54,7 @@ private fun TimerTask.execDaemon()
 	// filter article must contain europe
 	val filteredArticles = articles.filter { (_, article) ->
 		(article.headline + " " + article.teaser).toLowerCase().let {
-			it.contains("eu")
+			it.contains(Regex("(^|[^a-z])eu(:|[^a-z])"))
 			// english & french
 			|| it.contains("europe")
 			// german & spain & portugese

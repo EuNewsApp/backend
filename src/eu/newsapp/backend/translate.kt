@@ -1,6 +1,6 @@
 package eu.newsapp.backend
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.auth.*
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.translate.AmazonTranslate
@@ -11,11 +11,19 @@ import org.slf4j.LoggerFactory
 
 private val logger : Logger = LoggerFactory.getLogger("eu.newsapp.backend.Translate")
 
-val translateClient: AmazonTranslate by lazy {
-    val awsCreds = ProfileCredentialsProvider().credentials
+private object Credentials : AWSCredentialsProvider, AWSCredentials
+{
+    override fun getCredentials() : AWSCredentials = this
+    
+    override fun getAWSAccessKeyId() = Configuration.aws.key.id
+    override fun getAWSSecretKey() = Configuration.aws.key.secret
+    
+    override fun refresh() {}
+}
 
+val translateClient : AmazonTranslate by lazy {
     AmazonTranslateClient.builder()
-        .withCredentials(AWSStaticCredentialsProvider(awsCreds))
+        .withCredentials(AWSStaticCredentialsProvider(Credentials))
         .withRegion(Regions.US_EAST_1)
         .build()
 }
@@ -23,7 +31,8 @@ val translateClient: AmazonTranslate by lazy {
 fun String.translate(sourceLanguage : IsoAlpha2)
     = translate(sourceLanguage.name)
 
-fun String.translate(sourceLanguage : String): String {
+fun String.translate(sourceLanguage : String) : String
+{
     logger.info("Translating from $sourceLanguage to EN ...")
     val request = TranslateTextRequest()
             .withText(this)

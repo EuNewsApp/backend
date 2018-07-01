@@ -2,6 +2,7 @@ package eu.newsapp.backend.db
 
 import com.jcabi.jdbc.*
 import eu.newsapp.backend.IsoAlpha2
+import eu.newsapp.backend.db.ArticleOutcomeMapping.SELECT
 import eu.newsapp.backend.rss.RssArticle
 import java.sql.ResultSet
 import java.time.LocalDateTime
@@ -48,10 +49,10 @@ private object ArticleOutcomeMapping : ListOutcomeMapping<Article>()
 	)
 }
 
-fun store(articles : List<RssArticle>, sourceId : Long)
+fun List<RssArticle>.store(sourceId : Long)
 {
 	val sql = "INSERT INTO article (hash, headline, teaser, source, link, img, pub_date) VALUES (?, ?, ?, ?, ?, ?, ?::timestamp);"
-	articles.forEach { article ->
+	forEach { article ->
 		JdbcSession(source).sql(sql)
 				.set(article.hash)
 				.set(article.headline)
@@ -66,8 +67,14 @@ fun store(articles : List<RssArticle>, sourceId : Long)
 
 fun loadArticles(limit : Int = 25) : List<Article>
 {
-	val sql = "${ArticleOutcomeMapping.SELECT} ORDER BY pub_date DESC LIMIT ?;"
-	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome<Article>(ArticleOutcomeMapping))
+	val sql = "$SELECT ORDER BY pub_date DESC LIMIT ?;"
+	return JdbcSession(source).sql(sql).set(limit).select(ListOutcome(ArticleOutcomeMapping))
+}
+
+fun loadArticle(hash : String) : Article?
+{
+	val sql = "$SELECT WHERE hash = ?;"
+	return JdbcSession(source).sql(sql).set(hash).select(ListOutcome(ArticleOutcomeMapping)).firstOrNull()
 }
 
 fun articleHashExists(hash : String) : Boolean
@@ -89,4 +96,22 @@ fun articleLinkExists(link : String) : Boolean
 	val sql = "SELECT COUNT(*) FROM article WHERE link = ?;"
 	val count = JdbcSession(source).sql(sql).set(link).select(SingleOutcome<String>(String::class.java)).toInt()
 	return count != 0
+}
+
+fun setArticleTranslated(hash : String)
+{
+	val sql = "UPDATE article SET is_translated = TRUE WHERE hash = ?;"
+	JdbcSession(source).sql(sql).set(hash).execute()
+}
+
+fun setArticleClassified(id : Long)
+{
+	val sql = "UPDATE article SET is_classified = TRUE WHERE id = ?;"
+	JdbcSession(source).sql(sql).set(id).execute()
+}
+
+fun setArticlePublished(id : Long)
+{
+	val sql = "UPDATE article SET is_published = TRUE WHERE id = ?;"
+	JdbcSession(source).sql(sql).set(id).execute()
 }

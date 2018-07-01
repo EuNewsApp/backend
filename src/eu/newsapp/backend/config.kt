@@ -30,6 +30,21 @@ object Configuration
 {
 	private val logger : Logger = LoggerFactory.getLogger(Configuration::class.java)
 	
+	class AWSKey
+	{
+		@JsonProperty
+		var id = ""
+		
+		@JsonProperty
+		var secret = ""
+	}
+	
+	class AWS
+	{
+		@JsonProperty
+		var key = AWSKey()
+	}
+	
 	class Bugsnag
 	{
 		@JsonProperty
@@ -72,6 +87,9 @@ object Configuration
 	private class Root
 	{
 		@JsonProperty
+		var aws = AWS()
+		
+		@JsonProperty
 		var bugsnag = Bugsnag()
 		
 		@JsonProperty
@@ -83,6 +101,7 @@ object Configuration
 	
 	private var root = Root()
 	
+	val aws get() = root.aws
 	val bugsnag get() = root.bugsnag
 	val db get() = root.db
 	val elasticsearch get() = root.elasticsearch

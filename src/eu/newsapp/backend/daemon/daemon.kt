@@ -18,12 +18,12 @@
 
 package eu.newsapp.backend.daemon
 
+import eu.newsapp.backend.*
 import eu.newsapp.backend.db.*
-import eu.newsapp.backend.publishToElasticsearch
 import eu.newsapp.backend.rss.*
 import org.slf4j.*
 import java.lang.Runtime.*
-import java.time.ZonedDateTime
+import java.time.*
 import java.util.TimerTask
 import kotlin.concurrent.fixedRateTimer
 
@@ -77,7 +77,7 @@ private fun TimerTask.execDaemon()
 	
 	// store new articles
 	articlesBySource.forEach { (sourceId, articleList) ->
-		store(articleList, sourceId)
+		articleList.store(sourceId)
 	}
 	
 	// log
@@ -92,8 +92,69 @@ private fun TimerTask.execDaemon()
 	)
 	val scrapeLogId = insertScrapeLog(scrapeLog)
 	
-	// publish to elasticsearch
+	// publish scrape log to elasticsearch
 	scrapeLog.publishToElasticsearch(scrapeLogId)
+	
+	// group articles by language
+	val articlesByLanguage = newArticles.mapNotNull { (sourceId, article) ->
+		sources.find { it.id == sourceId }?.to(article)
+	}.groupBy { (source, _) ->
+		source.language
+	}.mapValues { (_, articleList) ->
+		articleList.map { (_, article) ->
+			article
+		}
+	}
+	
+	// mark all english articles as translated
+	articlesByLanguage.filter { (language, _) ->
+		language == IsoAlpha2.EN
+	}.forEach articleList@ { (_, articleList) ->
+		articleList.forEach article@ { article ->
+			setArticleTranslated(article.hash)
+		}
+	}
+	
+	// translate those articles
+	articlesByLanguage.filter { (language, _) ->
+		language != IsoAlpha2.EN
+	}.forEach articleList@ { (language, articleList) ->
+		val now = LocalDateTime.now()
+		val batch = articleList.map { article -> article.headline to article.teaser }.buildBatch()
+		val translated = batch.translate(language).parseBatch()
+		articleList.withIndex().forEach article@ { (i, article) ->
+			val (headline, teaser) = translated.getOrNull(i) ?: return@article
+			
+			// get article id
+			val articleId = loadArticle(article.hash)?.id
+			if (articleId == null)
+			{
+				logger.error("Error loading article $article, hash not found: ${article.hash}")
+				return@article
+			}
+			
+			// store translation
+			Translation(
+					id = -1,
+					articleId = articleId,
+					language = IsoAlpha2.EN,
+					headline = headline,
+					teaser = teaser,
+					translatedAt = now
+			).store()
+			
+			// mark article as translated
+			setArticleTranslated(article.hash)
+			
+			// store translation log
+			TranslationLog(
+					timestamp = now,
+					languageFrom = language,
+					languageTo = IsoAlpha2.EN,
+					characterCount = batch.length
+			).insert()
+		}
+	}
 }
 
 fun startDaemon()

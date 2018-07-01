@@ -20,11 +20,14 @@ package eu.newsapp.backend.daemon
 
 import eu.newsapp.backend.db.*
 import eu.newsapp.backend.publishToElasticsearch
-import eu.newsapp.backend.rss.RssReader
+import eu.newsapp.backend.rss.*
+import org.slf4j.*
 import java.lang.Runtime.*
 import java.time.ZonedDateTime
 import java.util.TimerTask
 import kotlin.concurrent.fixedRateTimer
+
+private val logger : Logger = LoggerFactory.getLogger("eu.newsapp.backend.daemon")
 
 private fun TimerTask.execDaemon()
 {
@@ -35,8 +38,16 @@ private fun TimerTask.execDaemon()
 	val articles = sources.filter { source ->
 		source.autoScrape
 	}.flatMap { source ->
-		val reader = RssReader()
-		reader.read(source.rss).map { source.id to it }
+		try
+		{
+			val reader = RssReader()
+			reader.read(source.rss).map { source.id to it }
+		}
+		catch (ex : Exception)
+		{
+			logger.error("Failed to scrape $source", ex)
+			emptyList<Pair<Long, RssArticle>>()
+		}
 	}
 	
 	// filter article must contain europe

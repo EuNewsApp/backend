@@ -5,6 +5,7 @@
             <pattern>[%d{dd.MM.yy HH:mm:ss.SSS}] %-5level %-33logger{33} - %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="BUGSNAG" class="eu.newsapp.backend.BugsnagAppender" />
 
     <logger name="eu.newsapp.backend" level="DEBUG" />
 
@@ -17,5 +18,6 @@
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="BUGSNAG" />
     </root>
 </configuration>

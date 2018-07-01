@@ -13,10 +13,6 @@ import java.time.LocalDate
 
 private val logger = LoggerFactory.getLogger("eu.newsapp.backend")
 
-val bugsnag by lazy {
-	Bugsnag(Configuration.bugsnag.key)
-}
-
 fun main(args : Array<String>)
 {
 	SLF4JBridgeHandler.removeHandlersForRootLogger()
@@ -24,9 +20,12 @@ fun main(args : Array<String>)
 	
 	Configuration.loadConfig(args.getOrNull(0))
 	
+	bugsnag = Bugsnag(Configuration.bugsnag.key)
 	bugsnag.setAppVersion(LocalDate.now().toString())
 	bugsnag.setReleaseStage("staging")
 	bugsnag.setSendThreads(true)
+	
+	logger.error("test:", Exception("Test Exception"))
 	
 	initDB()
 	

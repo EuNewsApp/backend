@@ -119,7 +119,7 @@ private fun TimerTask.execDaemon()
 	articlesByLanguage.filter { (language, _) ->
 		language != IsoAlpha2.EN
 	}.forEach articleList@ { (language, articleList) ->
-		val now = LocalDateTime.now()
+		val now = ZonedDateTime.now()
 		val batch = articleList.map { article -> article.headline to article.teaser }.buildBatch()
 		val translated = batch.translate(language).parseBatch()
 		articleList.withIndex().forEach article@ { (i, article) ->

@@ -22,7 +22,7 @@ import com.jcabi.jdbc.*
 import eu.newsapp.backend.IsoAlpha2
 import eu.newsapp.backend.db.TranslationOutcomeMapping.SELECT
 import java.sql.ResultSet
-import java.time.LocalDateTime
+import java.time.*
 
 data class Translation(
 		val id : Long,
@@ -30,7 +30,7 @@ data class Translation(
 		val language : IsoAlpha2,
 		val headline : String,
 		val teaser : String,
-		val translatedAt : LocalDateTime
+		val translatedAt : ZonedDateTime
 )
 
 private object TranslationOutcomeMapping : ListOutcomeMapping<Translation>()
@@ -43,7 +43,7 @@ private object TranslationOutcomeMapping : ListOutcomeMapping<Translation>()
 			language = rs.getString("language").let { enumValueOf<IsoAlpha2>(it) },
 			headline = rs.getString("headline"),
 			teaser = rs.getString("teaser"),
-			translatedAt = rs.getTimestamp("translated_at").toLocalDateTime()
+			translatedAt = rs.getTimestamp("translated_at").toLocalDateTime().atZone(ZoneId.systemDefault())
 	)
 }
 

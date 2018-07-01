@@ -24,7 +24,7 @@ import eu.newsapp.backend.IsoAlpha2
 import java.time.*
 
 data class TranslationLog(
-		val timestamp : LocalDateTime,
+		val timestamp : ZonedDateTime,
 		val languageFrom : IsoAlpha2,
 		val languageTo : IsoAlpha2,
 		val characterCount : Int

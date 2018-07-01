@@ -25,8 +25,6 @@ fun main(args : Array<String>)
 	bugsnag.setReleaseStage("staging")
 	bugsnag.setSendThreads(true)
 	
-	logger.error("test:", Exception("Test Exception"))
-	
 	initDB()
 	
 	setElasticsearchCredentials(elasticsearch.username, elasticsearch.password)

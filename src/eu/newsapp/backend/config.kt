@@ -49,6 +49,9 @@ object Configuration
 	{
 		@JsonProperty
 		var key = ""
+		
+		@JsonProperty
+		var stage = "unknown"
 	}
 	
 	class Database

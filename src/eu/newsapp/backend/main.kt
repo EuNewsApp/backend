@@ -22,7 +22,7 @@ fun main(args : Array<String>)
 	
 	bugsnag = Bugsnag(Configuration.bugsnag.key)
 	bugsnag.setAppVersion(LocalDate.now().toString())
-	bugsnag.setReleaseStage("staging")
+	bugsnag.setReleaseStage(Configuration.bugsnag.stage)
 	bugsnag.setSendThreads(true)
 	
 	initDB()

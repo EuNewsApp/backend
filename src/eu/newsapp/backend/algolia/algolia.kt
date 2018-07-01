@@ -71,7 +71,7 @@ fun publishToAlgolia(article : Article, source : Source, translations : List<Tra
 			img = article.img,
 			pubDate = article.pubDate.atZone(ZoneId.systemDefault()).toInstant().let { Date.from(it) }.time,
 			translations = translations.map {
-				it.language.name to AlgoliaTranslation(
+				it.language.name.toLowerCase() to AlgoliaTranslation(
 						teaser = it.teaser,
 						headline = it.headline
 				)

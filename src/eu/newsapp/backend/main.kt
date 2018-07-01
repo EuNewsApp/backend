@@ -74,7 +74,7 @@ fun main(args : Array<String>)
 				}
 			}
 		}
-		store(articles, source.id)
+		articles.store(source.id)
 		"""{"success":true}"""
 	}
 	

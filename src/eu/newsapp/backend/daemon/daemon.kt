@@ -57,6 +57,8 @@ private fun TimerTask.execDaemon()
 			it.contains(Regex("(^|[^a-z])eu(:|[^a-z])"))
 			// english & french
 			|| it.contains("europe")
+			// german
+			|| it.contains("europäisch")
 			// german & spain & portugese
 			|| it.contains("europa")
 		}

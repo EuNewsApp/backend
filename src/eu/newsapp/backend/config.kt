@@ -36,6 +36,24 @@ object Configuration
 		var key = ""
 	}
 	
+	class Database
+	{
+		@JsonProperty
+		var host = "localhost"
+		
+		@JsonProperty
+		var port = 5432
+		
+		@JsonProperty
+		var name = "eunify"
+		
+		@JsonProperty
+		var username = "postgres"
+		
+		@JsonProperty
+		var password : String? = null
+	}
+	
 	class ElasticSearch
 	{
 		@JsonProperty
@@ -57,12 +75,16 @@ object Configuration
 		var bugsnag = Bugsnag()
 		
 		@JsonProperty
+		var db = Database()
+		
+		@JsonProperty
 		var elasticsearch = ElasticSearch()
 	}
 	
 	private var root = Root()
 	
 	val bugsnag get() = root.bugsnag
+	val db get() = root.db
 	val elasticsearch get() = root.elasticsearch
 	
 	/**

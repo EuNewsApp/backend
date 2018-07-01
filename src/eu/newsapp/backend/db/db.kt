@@ -3,9 +3,11 @@ package eu.newsapp.backend.db
 import com.jcabi.jdbc.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import eu.newsapp.backend.Configuration
 import eu.newsapp.backend.rss.RssArticle
 import org.apache.commons.io.IOUtils
 import org.postgresql.ds.PGSimpleDataSource
+import sun.security.krb5.Config
 import java.lang.invoke.MethodHandles
 import java.sql.ResultSet
 import java.time.format.DateTimeFormatter
@@ -18,10 +20,11 @@ internal val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S z", Locale
 val source : DataSource by lazy {
 	val cfg = HikariConfig()
 	cfg.dataSource = PGSimpleDataSource().apply {
-		databaseName = "sopzzzbk"
-		serverName = "packy.db.elephantsql.com"
-		user = "sopzzzbk"
-		password = "2LOsAMMzgYVaVqWEWFzXwPnmqSyaMDsf"
+		databaseName = Configuration.db.name
+		serverName = Configuration.db.name
+		portNumber = Configuration.db.port
+		user = Configuration.db.username
+		password = Configuration.db.password
 	}
 	cfg.maximumPoolSize = 2
 	HikariDataSource(cfg)

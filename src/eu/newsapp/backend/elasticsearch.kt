@@ -52,6 +52,7 @@ fun ScrapeLog.publishToElasticsearch(id : Long) = try {
 			.post(RequestBody.create(JSON, data.toJsonString()))
 			.build())
 	val res = req.execute()
+	res.close()
 } catch (ex : Exception) {
 	logger.error("Error publishing to elasticsearch", ex)
 }

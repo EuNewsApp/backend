@@ -24,7 +24,7 @@ private object Credentials : AWSCredentialsProvider, AWSCredentials
 val translateClient : AmazonTranslate by lazy {
     AmazonTranslateClient.builder()
         .withCredentials(AWSStaticCredentialsProvider(Credentials))
-        .withRegion(Regions.US_EAST_1)
+        .withRegion(Regions.EU_WEST_1)
         .build()
 }
 

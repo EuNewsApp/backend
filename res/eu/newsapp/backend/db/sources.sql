@@ -4,7 +4,9 @@ BEGIN;
 
 INSERT INTO "source" (name, auto_scrape, country, "language", rss) VALUES
   ('Spiegel', TRUE, 'DE', 'DE', 'https://www.spiegel.de/thema/eu/index.rss'),
-  ('Süddeutsche', TRUE, 'DE', 'DE', 'https://www.sueddeutsche.de/news/rss?search=europa&sort=date&dep%5B%5D=politik&all%5B%5D=typ&all%5B%5D=sys&all%5B%5D=time'),
+  ('Süddeutsche', FALSE, 'DE', 'DE', 'https://www.sueddeutsche.de/news/rss?search=europa&sort=date&dep%5B%5D=politik&all%5B%5D=typ&all%5B%5D=sys&all%5B%5D=time'),
+  ('Focus', TRUE, 'DE', 'DE', 'https://rss.focus.de/fol/XML/rss_folnews.xml'),
+  ('Frankfurter Allgemeine', FALSE, 'DE', 'DE', 'http://www.faz.net/rss/aktuell/politik/'),
   ('Bild', FALSE, 'DE', 'DE', 'https://www.bild.de/rssfeeds/vw-politik/vw-politik-16728980,search=europa,dzbildplus=true,sort=1,teaserbildmobil=false,view=rss2.bild.xml'),
   ('Le Monde', TRUE, 'FR', 'FR', 'https://www.lemonde.fr/europe/rss_full.xml'),
   ('Le Figaro', TRUE, 'FR', 'FR', 'https://www.lefigaro.fr/rss/figaro_politique.xml'),

@@ -6,6 +6,7 @@
         </encoder>
     </appender>
     <appender name="BUGSNAG" class="eu.newsapp.backend.BugsnagAppender" />
+    <appender name="MATRIX" class="eu.newsapp.backend.MatrixAppender" />
 
     <logger name="eu.newsapp.backend" level="DEBUG" />
 
@@ -19,5 +20,6 @@
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="BUGSNAG" />
+        <appender-ref ref="MATRIX" />
     </root>
 </configuration>

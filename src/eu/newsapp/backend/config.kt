@@ -99,6 +99,27 @@ object Configuration
 		var password = "kibanaro"
 	}
 	
+	class Matrix
+	{
+		@JsonProperty
+		var homeserver = "matrix.org"
+		
+		@JsonProperty
+		var localpart = "eunify-bot"
+		
+		@JsonProperty
+		var uri = "https://matrix.org/"
+		
+		@JsonProperty
+		var token = ""
+		
+		@JsonProperty
+		var device = ""
+		
+		@JsonProperty
+		var room = ""
+	}
+	
 	private class Root
 	{
 		@JsonProperty
@@ -115,6 +136,9 @@ object Configuration
 		
 		@JsonProperty
 		var elasticsearch = ElasticSearch()
+		
+		@JsonProperty
+		var matrix = Matrix()
 	}
 	
 	private var root = Root()
@@ -124,6 +148,7 @@ object Configuration
 	val bugsnag get() = root.bugsnag
 	val db get() = root.db
 	val elasticsearch get() = root.elasticsearch
+	val matrix get() = root.matrix
 	
 	/**
 	 * Load the yaml configuration from [file].

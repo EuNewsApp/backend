@@ -2,13 +2,17 @@ package eu.newsapp.backend
 
 import com.bugsnag.Bugsnag
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import de.msrd0.matrix.client.*
+import de.msrd0.matrix.client.util.OkHttpTarget.Companion.client
 import eu.newsapp.backend.Configuration.elasticsearch
+import eu.newsapp.backend.Configuration.matrix
 import eu.newsapp.backend.daemon.startDaemon
 import eu.newsapp.backend.db.*
 import eu.newsapp.backend.rss.RssReader
 import org.slf4j.LoggerFactory
 import org.slf4j.bridge.SLF4JBridgeHandler
 import spark.Spark.*
+import java.net.URI
 import java.time.LocalDate
 
 private val logger = LoggerFactory.getLogger("eu.newsapp.backend")
@@ -24,6 +28,10 @@ fun main(args : Array<String>)
 	bugsnag.setAppVersion(LocalDate.now().toString())
 	bugsnag.setReleaseStage(Configuration.bugsnag.stage)
 	bugsnag.setSendThreads(true)
+	
+	val matrixClient = MatrixClient(matrix.homeserver, matrix.localpart, hsBaseUri = URI(matrix.uri))
+	matrixClient.userData = MatrixUserData(matrix.token, matrix.device)
+	matrixRoom = Room(matrixClient, RoomId.fromString(matrix.room))
 	
 	initDB()
 	

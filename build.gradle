@@ -2,46 +2,47 @@ group 'eu.newsapp.backend'
 version '0.1.0-SNAPSHOT'
 
 buildscript {
-    ext.algoliaVersion = '2.17.3'
-    ext.commonsCodecVersion = '1.11'
-    ext.commonsCsvVersion = '1.5'
-    ext.commonsEmailVersion = '1.5'
-    ext.commonsIoVersion = '2.6'
-    ext.exposedVersion = '0.9.1'
-    ext.flywayVersion = '5.1.1'
-    ext.freemarkerVersion = '2.3.28'
-    ext.hikariVersion = '3.1.0'
-    ext.jacksonVersion = '2.9.5'
-    ext.jcabiVersion = '0.17'
-    ext.jettyVersion = '9.4.9.v20180320'
-    ext.jodaVersion = '2.9.9'
-    ext.jschVersion = '0.1.54'
-    ext.jsoupVersion = '1.11.3'
-    ext.jtarVersion = '2.3'
-    ext.klaxonVersion = '0.32'
-    ext.kotlinVersion = '1.2.41'
-    ext.kotlinCoroutinesVersion = '0.22.5'
-    ext.logbackVersion = '1.2.3'
-    ext.okhttpVersion = '3.10.0'
-    ext.pdfboxVersion = '2.0.9'
-    ext.postgresVersion = '42.2.2'
-    ext.slf4jVersion = '1.7.25'
-    ext.sparkVersion = '2.7.1'
-    ext.romeVersion = '1.10.0'
-    ext.testngVersion = '6.14.3'
-    ext.ucanaccessVersion = '4.0.2'
-    ext.xzVersion = '1.8'
+	ext.algoliaVersion = '2.17.3'
+	ext.commonsCodecVersion = '1.11'
+	ext.commonsCsvVersion = '1.5'
+	ext.commonsEmailVersion = '1.5'
+	ext.commonsIoVersion = '2.6'
+	ext.exposedVersion = '0.9.1'
+	ext.flywayVersion = '5.1.1'
+	ext.freemarkerVersion = '2.3.28'
+	ext.hikariVersion = '3.1.0'
+	ext.jacksonVersion = '2.9.5'
+	ext.jcabiVersion = '0.17'
+	ext.jettyVersion = '9.4.9.v20180320'
+	ext.jodaVersion = '2.9.9'
+	ext.jschVersion = '0.1.54'
+	ext.jsoupVersion = '1.11.3'
+	ext.jtarVersion = '2.3'
+	ext.klaxonVersion = '0.32'
+	ext.kotlinVersion = '1.2.41'
+	ext.kotlinCoroutinesVersion = '0.22.5'
+	ext.logbackVersion = '1.2.3'
+	ext.matrixVersion = '1.0-rc1'
+	ext.okhttpVersion = '3.10.0'
+	ext.pdfboxVersion = '2.0.9'
+	ext.postgresVersion = '42.2.2'
+	ext.slf4jVersion = '1.7.25'
+	ext.sparkVersion = '2.7.1'
+	ext.romeVersion = '1.10.0'
+	ext.testngVersion = '6.14.3'
+	ext.ucanaccessVersion = '4.0.2'
+	ext.xzVersion = '1.8'
 
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
-    }
+	repositories {
+		mavenLocal()
+		jcenter()
+		maven { url "https://plugins.gradle.org/m2/" }
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+		classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+	}
 }
 
 apply plugin: 'kotlin'
@@ -53,20 +54,21 @@ apply plugin: "io.spring.dependency-management"
 mainClassName = 'eu.newsapp.backend.MainKt'
 
 dependencyManagement {
-    imports {
-        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.228'
-    }
+	imports {
+		mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.228'
+	}
 }
 
 repositories {
-    mavenLocal()
-    jcenter()
+	mavenLocal()
+	jcenter()
+	maven { url "https://maven.nextgenenergy.co.nz/artifactory/maven/" }
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinCoroutinesVersion"
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+	compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+	compile "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinCoroutinesVersion"
 	
 	compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
 	compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
@@ -74,60 +76,61 @@ dependencies {
 	compile 'com.beust:klaxon:3.0.1'
 	
 	compile "org.slf4j:slf4j-api:$slf4jVersion"
-    compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
+	compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
 	compile "org.slf4j:jul-to-slf4j:$slf4jVersion"
 	compile 'com.github.devcsrj:slf4j-okhttp3-logging-interceptor:1.0.1'
-    compile "ch.qos.logback:logback-classic:$logbackVersion"
+	compile "ch.qos.logback:logback-classic:$logbackVersion"
 	compile "com.bugsnag:bugsnag:3.1.6"
-    compile "commons-io:commons-io:$commonsIoVersion"
-    compile "org.jsoup:jsoup:$jsoupVersion"
-    
-    compile "com.sparkjava:spark-core:$sparkVersion"
-    compile "org.eclipse.jetty:jetty-server:$jettyVersion"
-    compile "org.eclipse.jetty:jetty-webapp:$jettyVersion"
-    compile "org.eclipse.jetty.websocket:websocket-server:$jettyVersion"
-    compile "com.sparkjava:spark-template-freemarker:$sparkVersion"
-    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    compile "com.rometools:rome:$romeVersion"
-    compile "org.postgresql:postgresql:$postgresVersion"
-    compile "com.zaxxer:HikariCP:$hikariVersion"
-    compile "com.jcabi:jcabi-jdbc:$jcabiVersion"
-    
-    compile 'com.amazonaws:aws-java-sdk-core:1.11.288'
-    compile 'com.amazonaws:aws-java-sdk-translate:1.11.288'
+	compile "commons-io:commons-io:$commonsIoVersion"
+	compile "org.jsoup:jsoup:$jsoupVersion"
+	compile "de.msrd0.matrix:matrix-client:$matrixVersion"
+	
+	compile "com.sparkjava:spark-core:$sparkVersion"
+	compile "org.eclipse.jetty:jetty-server:$jettyVersion"
+	compile "org.eclipse.jetty:jetty-webapp:$jettyVersion"
+	compile "org.eclipse.jetty.websocket:websocket-server:$jettyVersion"
+	compile "com.sparkjava:spark-template-freemarker:$sparkVersion"
+	compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+	compile "com.rometools:rome:$romeVersion"
+	compile "org.postgresql:postgresql:$postgresVersion"
+	compile "com.zaxxer:HikariCP:$hikariVersion"
+	compile "com.jcabi:jcabi-jdbc:$jcabiVersion"
+	
+	compile 'com.amazonaws:aws-java-sdk-core:1.11.288'
+	compile 'com.amazonaws:aws-java-sdk-translate:1.11.288'
 
-    compile 'com.google.cloud:google-cloud-language:1.31.0'
-    
-    compile "com.algolia:algoliasearch:$algoliaVersion"
-    
-    testCompile "org.testng:testng:$testngVersion"
+	compile 'com.google.cloud:google-cloud-language:1.31.0'
+	
+	compile "com.algolia:algoliasearch:$algoliaVersion"
+	
+	testCompile "org.testng:testng:$testngVersion"
 }
 
 sourceSets {
-    main {
-        java.srcDirs = ['src']
-        kotlin.srcDirs = ['src']
-        resources.srcDirs = ['res']
-    }
-    test {
-        java.srcDirs = ['test']
-        kotlin.srcDirs = ['test']
-    }
+	main {
+		java.srcDirs = ['src']
+		kotlin.srcDirs = ['src']
+		resources.srcDirs = ['res']
+	}
+	test {
+		java.srcDirs = ['test']
+		kotlin.srcDirs = ['test']
+	}
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions.jvmTarget = "1.8"
 }
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions.jvmTarget = "1.8"
 }
 kotlin {
-    experimental {
-        coroutines 'enable'
-    }
+	experimental {
+		coroutines 'enable'
+	}
 }
 test {
-    useTestNG()
+	useTestNG()
 }
 
 apply plugin: 'com.github.ben-manes.versions'

@@ -66,7 +66,7 @@ class MatrixAppender : UnsynchronizedAppenderBase<ILoggingEvent>()
 {
 	override fun append(event : ILoggingEvent?)
 	{
-		if (event == null || !::matrixRoom.isInitialized)
+		if (event == null || !::matrixRoom.isInitialized || event.level.levelInt < Level.WARN_INT)
 			return
 		
 		val exception = event.throwableProxy.let { it as? ThrowableProxy }?.throwable

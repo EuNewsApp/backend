@@ -46,7 +46,7 @@ private fun TimerTask.execDaemon()
 		}
 		catch (ex : Exception)
 		{
-			logger.error("Failed to scrape $source", ex)
+			logger.warn("Failed to scrape $source", ex)
 			emptyList<Pair<Long, RssArticle>>()
 		}
 	}
@@ -82,9 +82,6 @@ private fun TimerTask.execDaemon()
 	articlesBySource.forEach { (sourceId, articleList) ->
 		articleList.store(sourceId)
 	}
-	
-	// log
-	println("Scraping successful, {'articles':${articles.size}, 'filteredArticles':${filteredArticles.size}, 'newArticles':${newArticles.size}}")
 	
 	// store scrape log
 	val scrapeLog = ScrapeLog(
@@ -176,7 +173,16 @@ private fun TimerTask.execDaemon()
 
 fun startDaemon()
 {
-	val fixedRateTimer = fixedRateTimer(name = "daemon", action = TimerTask::execDaemon, initialDelay = 1000L, period = 600_000L)
+	val fixedRateTimer = fixedRateTimer(name = "daemon", initialDelay = 1000L, period = 600_000L) {
+		try
+		{
+			execDaemon()
+		}
+		catch (ex : Exception)
+		{
+			logger.error("Uncaught Exception from daemon", ex)
+		}
+	}
 	
 	getRuntime().addShutdownHook(Thread {
 		fixedRateTimer.cancel()

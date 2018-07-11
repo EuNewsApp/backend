@@ -35,10 +35,10 @@ private fun createMessageContent(exception : Throwable?, message : String, conte
 	var html = "<p>"
 	
 	val color = when (level) {
-		Level.DEBUG -> "#2b1"
-		Level.WARN -> "#fa0"
-		Level.ERROR -> "#e02"
-		else -> "#17f"
+		Level.DEBUG -> "#22BB11"
+		Level.WARN -> "#FFAA00"
+		Level.ERROR -> "#EE0022"
+		else -> "#1177FF"
 	}
 	
 	text += "[${level.levelStr}]"

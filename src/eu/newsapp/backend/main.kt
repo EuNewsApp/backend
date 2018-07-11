@@ -29,7 +29,10 @@ fun main(args : Array<String>)
 	bugsnag.setReleaseStage(Configuration.bugsnag.stage)
 	bugsnag.setSendThreads(true)
 	
-	val matrixClient = MatrixClient(matrix.homeserver, matrix.localpart, hsBaseUri = URI(matrix.uri))
+	val matrixClient = object : MatrixClient(matrix.homeserver, matrix.localpart, hsBaseUri = URI(matrix.uri)) {
+		override val nextTxnId : Long
+			get() = System.nanoTime()
+	}
 	matrixClient.userData = MatrixUserData(matrix.token, matrix.device)
 	matrixRoom = Room(matrixClient, RoomId.fromString(matrix.room))
 	
